@@ -1,0 +1,5 @@
+venv/
+output.log
+config
+.pytest_cache
+.idea

@@ -2,21 +2,7 @@ import configparser
 import logging
 import base64
 from data import User
-
-
-def run_func(user: User, func, args):
-    logging.info(f'Attempting {func.__name__}...')
-    status_code, message = func(*args)
-    if status_code == 401:
-        logging.error('Invaid Token! Requesting refresh...')
-        user.get_fresh_access_token()
-        logging.info('New Token Acquired')
-        logging.info(f'Attempting {func.__name__} again...')
-        status_code, message = func(*args)
-
-    if status_code not in (200, 201):
-        logging.error(f"Failed to call {func.__name__} with error code {status_code} : {message}")
-
+from exceptions import FailedSpotifyAPICall
 
 if __name__ == '__main__':
     logging.basicConfig(filename="output.log", level=logging.DEBUG)
@@ -25,10 +11,15 @@ if __name__ == '__main__':
     cfg.read('config')
 
 
-    def update_token(new_token):
-        cfg.set("finn", "access_token", new_token)
-        cfg.write(open('config', 'w'))
-        logging.info('New Token Written to File')
+    def update_user_data(user: User):
+        if not cfg['finn']['access_token'] == user.access_token:
+            cfg.set("finn", "access_token", user.access_token)
+            cfg.write(open('config', 'w'))
+            logging.info('New Token Written to File')
+        if not cfg['finn']['playlist_id'] == user.playlist_id:
+            cfg.set("finn", "playlist_id", user.playlist_id)
+            cfg.write(open('config', 'w'))
+            logging.info('New Playlist ID Written to File')
 
 
     client_id = cfg['app']['client_id']
@@ -39,9 +30,21 @@ if __name__ == '__main__':
     access_token = cfg['finn']['access_token']
     refresh_token = cfg['finn']['refresh_token']
     user_id = cfg['finn']['user_id']
+    playlist_id = cfg['finn']['playlist_id']
 
-    finn = User(access_token, refresh_token, user_id, client_b64)
+    user = User(access_token, refresh_token, user_id, client_b64, playlist_id)
 
-    run_func(finn, finn.create_playlist, ('fresh toons',))
+    if playlist_id == '':
+        user.create_playlist('fresh toons')
 
-    update_token(finn.access_token)
+    try:
+        if user.poll_playlist():
+            user.update_playlist()
+        else:
+            logging.info(f'Playlist has been deleted for user {user.user_id}')
+            quit()
+    except FailedSpotifyAPICall as err:
+        logging.error(f'Spotify API call failing with code {err.status_code}: {err.json}')
+        pass
+
+    update_user_data(user)

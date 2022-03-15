@@ -25,7 +25,8 @@ jobs:
           pip3 install --target ./src -r requirements.txt
       - name: zip
         run: |
-          zip -r bundle.zip src/*
+          cd src
+          zip -r ../bundle.zip .
       - name: default deploy
         uses: appleboy/lambda-action@master
         with:

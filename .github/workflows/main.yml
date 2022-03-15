@@ -24,9 +24,8 @@ jobs:
         run: |
           pip3 install --target ./src -r requirements.txt
       - name: zip
-        uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r ./bundle.zip ./src/*
+        run: |
+          zip -r bundle.zip src/*
       - name: default deploy
         uses: appleboy/lambda-action@master
         with:

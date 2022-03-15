@@ -1,3 +1,0 @@
--r ../requirements.txt
-responses=0.18.0
-pytest==7.0.1

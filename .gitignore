@@ -1,5 +1,6 @@
 venv/
 output.log
-config
+src/config
 .pytest_cache
 .idea
+users.csv

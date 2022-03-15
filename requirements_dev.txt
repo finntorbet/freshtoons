@@ -1,0 +1,5 @@
+-r requirements.txt
+responses==0.18.0
+pytest==7.0.1
+moto==2.2.9.dev19
+pytest-mock==3.7.0

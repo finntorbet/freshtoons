@@ -5,7 +5,7 @@ import pandas as pd
 from moto import mock_s3
 from pandas.testing import assert_frame_equal
 
-from persistence import upload_users, retrieve_users
+from src.persistence import upload_users, retrieve_users
 
 
 @mock_s3
@@ -35,7 +35,7 @@ def test_retrieve_users_happy_path():
     })
 
     csv_buffer = StringIO()
-    expected.to_csv(csv_buffer)
+    expected.to_csv(csv_buffer, index=False)
     conn.Object('testbucket', 'users.csv').put(
         Body=csv_buffer.getvalue()
     )

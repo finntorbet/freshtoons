@@ -2,11 +2,9 @@ import logging
 import os
 import base64
 
-import pandas as pd
-
-from api import User
-from exceptions import FailedSpotifyAPICall
-from persistence import upload_users, retrieve_users
+from src.api import User
+from src.exceptions import FailedSpotifyAPICall
+from src.persistence import upload_users, retrieve_users
 
 
 def update():

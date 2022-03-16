@@ -19,7 +19,7 @@ jobs:
           pip3 install -r requirements_dev.txt
       - name: Run Tests
         run: |
-          export PYTHONPATH=src
+          export PYTHONPATH=src \
           ${{ matrix.python-version }} -m pytest test
       - name: Install Dependencies for deployment
         run: |

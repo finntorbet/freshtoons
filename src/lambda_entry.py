@@ -7,7 +7,7 @@ from exceptions import FailedSpotifyAPICall
 from persistence import upload_users, retrieve_users
 
 
-def update():
+def update(event, context):
     """
     TODO: Add documentation
     :return:

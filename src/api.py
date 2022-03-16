@@ -1,5 +1,5 @@
 from requests import post, get, put
-from src.exceptions import FailedTokenRefresh, FailedSpotifyAPICall
+from exceptions import FailedTokenRefresh, FailedSpotifyAPICall
 import logging
 import pandas as pd
 

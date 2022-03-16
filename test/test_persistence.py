@@ -5,7 +5,7 @@ import pandas as pd
 from moto import mock_s3
 from pandas.testing import assert_frame_equal
 
-from src.persistence import upload_users, retrieve_users
+from persistence import upload_users, retrieve_users
 
 
 @mock_s3

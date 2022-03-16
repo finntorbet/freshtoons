@@ -1,7 +1,7 @@
 import responses
 from responses.matchers import json_params_matcher, header_matcher
 
-from src.api import User
+from api import User
 
 
 class Test_CreatePlaylist:

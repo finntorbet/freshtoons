@@ -13,7 +13,7 @@ def update(event, context):
     :return:
     """
 
-    logging.basicConfig(level=logging.DEBUG)
+    logging.getLogger().setLevel(level=logging.DEBUG)
 
     client_id = os.getenv('client_id')
     client_secret = os.getenv('client_secret')

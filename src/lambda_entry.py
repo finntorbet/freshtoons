@@ -35,7 +35,7 @@ def update(event, context):
             refresh_token=row['refresh_token'],
             user_id=row['user_id'],
             playlist_id=row['playlist_id'],
-            playlist_size=row['playlist_size'],
+            playlist_size=row['size'],
             client_b64=client_b64
         )
 

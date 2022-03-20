@@ -49,7 +49,7 @@ def update(event, context):
                 continue
         except FailedSpotifyAPICall as err:
             logging.error(f'Spotify API call failing with code {err.status_code}: {err.json}')
-            pass
+            continue
 
     upload_users(users)
 

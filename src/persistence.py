@@ -18,7 +18,7 @@ def retrieve_users(bucket='freshtoons'):
     logging.debug(f'Retrieved users.csv from {bucket}!')
     body = csv_obj['Body']
     csv_string = body.read().decode('utf-8')
-    return pd.read_csv(StringIO(csv_string), index_col=False, dtype=object)
+    return pd.read_csv(StringIO(csv_string), index_col=False, dtype=object, keep_default_na=False)
 
 
 def upload_users(users_csv, bucket='freshtoons'):

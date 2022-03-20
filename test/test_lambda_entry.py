@@ -15,6 +15,7 @@ def mock_settings_env_vars():
     mock.patch.dict(os.environ, {"client_secret": "4321"})
 
 def test_update_happy_path(mocker):
+    pass
     # Mock persistence.retrieve_users()
     # x = pd.DataFrame({
     #     'user_id': 'a_user_id',
@@ -45,15 +46,14 @@ def test_update_happy_path(mocker):
     #   - the csv is sent to upload_users
 
 def test_empty_users():
-
+    pass
     # Check
     #   - no User objects are created or called
-    pass
 
 def test_empty_playlistsize():
+    pass
     # Check
     #   -
-    pass
 
 def test_deleted_playlist():
     pass

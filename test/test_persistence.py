@@ -10,7 +10,7 @@ from persistence import upload_users, retrieve_users
 
 @mock_s3
 def test_upload_users_happy_path():
-    conn = boto3.resource('s3')
+    conn = boto3.resource('s3', region_name="us-east-1")
     conn.create_bucket(Bucket='testbucket')
     expected = pd.DataFrame({
                      'A': ['1'],
@@ -27,7 +27,7 @@ def test_upload_users_happy_path():
 
 @mock_s3
 def test_retrieve_users_happy_path():
-    conn = boto3.resource('s3')
+    conn = boto3.resource('s3', region_name="us-east-1")
     conn.create_bucket(Bucket='testbucket')
     expected = pd.DataFrame({
         'A': ['1'],

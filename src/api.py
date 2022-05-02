@@ -17,7 +17,7 @@ class User:
         if playlist_size is None or playlist_size == '' or pd.isnull(playlist_size):
             self.playlist_size = 20
         else:
-            self.playlist_size = playlist_size
+            self.playlist_size = int(playlist_size)
 
     def post_caller(self, url, headers=None, data=None, json=None):
         res = post(url=url, headers=headers, data=data, json=json)

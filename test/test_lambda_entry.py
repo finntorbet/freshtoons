@@ -1,15 +1,13 @@
 import os
+from unittest import mock
 
 import pytest
-from unittest.mock import patch
-
 import pandas as pd
 
 from api import User
 from lambda_entry import update
 
 expected_client_64 = 'MTIzNDo0MzIx'
-
 
 @pytest.fixture(autouse=True)
 def mock_settings_env_vars():

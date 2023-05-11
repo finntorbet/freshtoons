@@ -14,6 +14,7 @@ def mock_settings_env_vars():
     mock.patch.dict(os.environ, {"client_id": "1234"})
     mock.patch.dict(os.environ, {"client_secret": "4321"})
 
+# TODO Test top level happy path with mocked commponents
 def test_update_happy_path(mocker):
     pass
     # Mock persistence.retrieve_users()

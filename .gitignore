@@ -4,3 +4,4 @@ src/config
 .pytest_cache
 .idea
 users.csv
+.gitignore

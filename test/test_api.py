@@ -232,8 +232,8 @@ class Test_UpdatePlaylist:
         test_user.update_playlist()
 
         assert len(responses.calls) == 1
-        assert responses.calls[
-                   0].request.url == 'https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks?uris=song%3A1%2Csong%3A2%2Csong%3A3%2C'
+        assert responses.calls[0] \
+                   .request.url == 'https://api.spotify.com/v1/playlists/' + playlist_id + '/tracks?uris=song%3A1%2Csong%3A2%2Csong%3A3%2C'
 
 
 # TODO Test get_fresh_access_token

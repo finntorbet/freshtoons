@@ -34,7 +34,7 @@ To keep deployment information hidden and secure, GitHub Action Secrets is used 
 
 To secure the spotify authorization token, the data will be stored in a private S3 bucket as a csv since the data does not need to be secure or highly accessible.
 
-##To Do
+## To Do
 The following elements are outlined in descending order of priority-effort (the higher the item the more impact it will have with the least amount of effort).
 - Complete outstanding happy path unit tests.
 - Buff out current unit tests with chaos engineering to catch edge cases and fail situations.
@@ -44,6 +44,6 @@ The following elements are outlined in descending order of priority-effort (the 
 - Create smoke tests for backend system for end-to-end mock.
 - Add feature to update the playlist with liked songs from the past *n* days instead of just the top *n*.
 ___
-######Note
+###### Note
 This section should be moved to GitHub Issues within the code repository to keep project management tidy and tied to branch/PR operations.
 ___

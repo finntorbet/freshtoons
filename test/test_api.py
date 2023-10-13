@@ -1,7 +1,10 @@
 import responses
 from responses.matchers import json_params_matcher, header_matcher
 
+import json
+
 from api import User
+from api import PLAYLIST_PAGE_SIZE
 
 
 class Test_CreatePlaylist:
@@ -44,19 +47,27 @@ class Test_CreatePlaylist:
 
 class Test_PlaylistStillExists:
 
-    def add_response(self, items):
-        body = '{"items": ['
+    def add_response(self, items, next=True):
+        body = {}
+
+        items_json = []
         for playlist_id in items:
-            body = body + '{"name":"a name", "id": "' + playlist_id + '"}'
-            if not playlist_id == items[len(items) - 1]:
-                body = body + ','
-        body = body + ']}'
+            items_json.append({
+                "name": "a name",
+                "id": playlist_id
+            })
+        body["items"] = items_json
+
+        if next:
+            body["next"] = "https://api.spotify.com/v1/me/playlists?offset=x"
+        else:
+            body["next"] = None
 
         responses.add(
             **{
                 'method': responses.GET,
                 'url': 'https://api.spotify.com/v1/me/playlists',
-                'body': body,
+                'body': json.dumps(body),
                 'status': 200,
                 'content_type': 'application/json'
             },
@@ -72,7 +83,7 @@ class Test_PlaylistStillExists:
     def test_happy_path(self):
         playlist_id_to_match = 'id_to_match'
 
-        self.add_response(['false', playlist_id_to_match, 'something'])
+        self.add_response(['false', playlist_id_to_match, 'something'], next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id=playlist_id_to_match,
                          playlist_size='', client_b64='')
@@ -81,12 +92,32 @@ class Test_PlaylistStillExists:
 
         assert len(responses.calls) == 1
 
-        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists'
+        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists?offset=0&limit=' + str(PLAYLIST_PAGE_SIZE)
+        assert result
+
+    @responses.activate
+    def test_happy_path_pagination(self):
+        playlist_id_to_match = 'id_to_match'
+
+        self.add_response(['false']*PLAYLIST_PAGE_SIZE)
+        self.add_response(['false']*PLAYLIST_PAGE_SIZE)
+        self.add_response(['false', playlist_id_to_match, 'something'], next=False)
+
+        test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id=playlist_id_to_match,
+                         playlist_size='', client_b64='')
+
+        result = test_user.playlist_still_exists()
+
+        assert len(responses.calls) == 3
+
+        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists?offset=0&limit=' + str(PLAYLIST_PAGE_SIZE)
+        assert responses.calls[1].request.url == 'https://api.spotify.com/v1/me/playlists?offset=20&limit=' + str(PLAYLIST_PAGE_SIZE)
+        assert responses.calls[2].request.url == 'https://api.spotify.com/v1/me/playlists?offset=40&limit=' + str(PLAYLIST_PAGE_SIZE)
         assert result
 
     @responses.activate
     def test_false(self):
-        self.add_response([])
+        self.add_response([], next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id='',
                          playlist_size='', client_b64='')
@@ -95,7 +126,23 @@ class Test_PlaylistStillExists:
 
         assert len(responses.calls) == 1
 
-        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists'
+        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists?offset=0&limit=' + str(PLAYLIST_PAGE_SIZE)
+        assert not result
+
+    @responses.activate
+    def test_false_full_pagination(self):
+        self.add_response(['something']*PLAYLIST_PAGE_SIZE)
+        self.add_response(['something']*5, next=False)
+
+        test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id='',
+                         playlist_size='', client_b64='')
+
+        result = test_user.playlist_still_exists()
+
+        assert len(responses.calls) == 2
+
+        assert responses.calls[0].request.url == 'https://api.spotify.com/v1/me/playlists?offset=0&limit=' + str(PLAYLIST_PAGE_SIZE)
+        assert responses.calls[1].request.url == 'https://api.spotify.com/v1/me/playlists?offset=20&limit=' + str(PLAYLIST_PAGE_SIZE)
         assert not result
 
 

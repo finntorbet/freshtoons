@@ -13,7 +13,7 @@ def update(event, context):
     :return:
     """
 
-    logging.getLogger().setLevel(level=logging.DEBUG)
+    logging.getLogger().setLevel(level=logging.INFO)
 
     client_id = os.getenv('client_id')
     client_secret = os.getenv('client_secret')
@@ -46,7 +46,8 @@ def update(event, context):
             else:
                 logging.info(f'Playlist has been deleted for user {user.user_id}')
                 # TODO: Add 'users.drop(index, inplace=True)' to delete user from dataframe
-                continue
+                # Consider that this would delete the refresh token as well, requiring re-authentication for the application
+                # Perhaps an active flag would be more applicable, but then how to turn that back on?
         except FailedSpotifyAPICall as err:
             logging.error(f'Spotify API call failing with code {err.status_code}: {err.json}')
             continue

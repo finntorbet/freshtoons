@@ -5,6 +5,9 @@ import pandas as pd
 
 api_url = 'https://api.spotify.com/v1/'
 
+# 20 is the default, but explicitly declaring it helps robustability
+PLAYLIST_PAGE_SIZE = 20
+
 
 class User:
     """
@@ -160,10 +163,18 @@ class User:
             'Content-Type': 'application/json'
         }
 
-        response_json = self.get_caller(url=url, headers=headers)
-        for playlist in response_json['items']:
-            if self.playlist_id in playlist['id']:
-                return True
+        more_pages = True
+        offset = 0
+        while more_pages:
+            response_json = self.get_caller(url=url, headers=headers, params={"offset": offset, "limit": PLAYLIST_PAGE_SIZE})
+            for playlist in response_json['items']:
+                if self.playlist_id == playlist['id']:
+                    return True
+
+            offset = offset + PLAYLIST_PAGE_SIZE
+
+            if response_json['next'] is None:
+                more_pages = False
         return False
 
     def get_liked_songs(self):

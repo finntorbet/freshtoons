@@ -21,9 +21,9 @@ def update(event, context):
     users = retrieve_users()
 
     def update_user_data(user_to_check: User):
-        users.loc[users['access_token'] != [user_to_check.access_token], 'access_token'] = user_to_check.access_token
-        users.loc[users['refresh_token'] != [user_to_check.refresh_token], 'refresh_token'] = user_to_check.refresh_token
-        users.loc[users['playlist_id'] != [user_to_check.playlist_id], 'playlist_id'] = user_to_check.playlist_id
+        users.loc[users['user_id'] == user_to_check.user_id, 'access_token'] = user_to_check.access_token
+        users.loc[users['user_id'] == user_to_check.user_id, 'refresh_token'] = user_to_check.refresh_token
+        users.loc[users['user_id'] == user_to_check.user_id, 'playlist_id'] = user_to_check.playlist_id
 
     client_str = f"{client_id}:{client_secret}"
     client_b64 = base64.urlsafe_b64encode(client_str.encode()).decode()

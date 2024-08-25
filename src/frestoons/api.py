@@ -1,5 +1,5 @@
 from requests import post, get, put
-from exceptions import FailedTokenRefresh, FailedSpotifyAPICall
+from .exceptions import FailedTokenRefresh, FailedSpotifyAPICall
 import logging
 import pandas as pd
 
@@ -8,6 +8,8 @@ api_url = 'https://api.spotify.com/v1/'
 # 20 is the default, but explicitly declaring it helps robustability
 PLAYLIST_PAGE_SIZE = 20
 
+DEFAULT_PLAYLIST_SIZE = 40
+
 
 class User:
     """
@@ -15,16 +17,32 @@ class User:
     The user can refresh its own token and call common api functions for the user it is created for.
     """
 
-    def __init__(self, access_token, refresh_token, user_id, client_b64, playlist_id, playlist_size):
+    def __init__(self, access_token, refresh_token, user_id, client_b64, playlist_size=DEFAULT_PLAYLIST_SIZE):
+        self.access_token = access_token
+        self.refresh_token = refresh_token
+        self.user_id = user_id
+        self.client_b64 = client_b64
+        self.playlist_size = playlist_size
+
+        self.create_playlist("fresh toons")
+
+    def __init__(self, access_token, refresh_token, user_id, client_b64, playlist_id, playlist_size=DEFAULT_PLAYLIST_SIZE):
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.user_id = user_id
         self.playlist_id = playlist_id
         self.client_b64 = client_b64
-        if playlist_size is None or playlist_size == '' or pd.isnull(playlist_size):
-            self.playlist_size = 20
-        else:
-            self.playlist_size = int(playlist_size)
+        self.playlist_size = int(playlist_size)
+
+    def get_dict():
+        return {
+                "user_id": self.user_id,
+                "playlist_id": self.playlist_id,
+                "access_token": self.access_token,
+                "refresh_token": self.refresh_token,
+                "size": self.playlist_size,
+                "date_offset": None,
+        }
 
     def post_caller(self, url, headers=None, data=None, json=None):
         """

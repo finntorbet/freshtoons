@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.github",
+    "\\src",
+    "\\src\\frestoons",
+    "\\tests"
+  ],
+  "SelectedNode": "\\tests\\test_api.py",
+  "PreviewInSolutionExplorer": false
+}

@@ -3,8 +3,12 @@ from responses.matchers import json_params_matcher, header_matcher
 
 import json
 
-from api import User
-from api import PLAYLIST_PAGE_SIZE
+import sys
+import os
+
+from frestoons.api import User
+from frestoons.api import PLAYLIST_PAGE_SIZE
+
 
 
 class Test_CreatePlaylist:
@@ -35,7 +39,7 @@ class Test_CreatePlaylist:
         )
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id='',
-                         playlist_size='', client_b64='')
+                         client_b64='')
 
         test_user.create_playlist('test name')
 
@@ -86,7 +90,7 @@ class Test_PlaylistStillExists:
         self.add_response(['false', playlist_id_to_match, 'something'], next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id=playlist_id_to_match,
-                         playlist_size='', client_b64='')
+                         playlist_size='1', client_b64='')
 
         result = test_user.playlist_still_exists()
 
@@ -104,7 +108,7 @@ class Test_PlaylistStillExists:
         self.add_response(['false', playlist_id_to_match, 'something'], next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id=playlist_id_to_match,
-                         playlist_size='', client_b64='')
+                         playlist_size='1', client_b64='')
 
         result = test_user.playlist_still_exists()
 
@@ -120,7 +124,7 @@ class Test_PlaylistStillExists:
         self.add_response([], next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id='',
-                         playlist_size='', client_b64='')
+                         playlist_size='1', client_b64='')
 
         result = test_user.playlist_still_exists()
 
@@ -135,7 +139,7 @@ class Test_PlaylistStillExists:
         self.add_response(['something']*5, next=False)
 
         test_user = User(access_token='access_token', refresh_token='', user_id='111', playlist_id='',
-                         playlist_size='', client_b64='')
+                         playlist_size='1', client_b64='')
 
         result = test_user.playlist_still_exists()
 
@@ -274,7 +278,7 @@ class Test_UpdatePlaylist:
         mocker.patch.object(User, 'get_liked_songs', return_value=['song:1', 'song:2', 'song:3'])
 
         test_user = User(access_token='access_token', refresh_token='', user_id='', playlist_id=playlist_id,
-                         playlist_size='', client_b64='')
+                         playlist_size='1', client_b64='')
 
         test_user.update_playlist()
 

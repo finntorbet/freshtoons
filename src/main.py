@@ -4,21 +4,22 @@ import base64
 
 from api import User
 from exceptions import FailedSpotifyAPICall
-from persistence import upload_users, retrieve_users, LocalPersistence
-
-
-
+from persistence import upload_users, retrieve_users
 
 logging.getLogger().setLevel(level=logging.INFO)
 
-persisitence = LocalPersistence()
+client_id = os.getenv('client_id')
+client_secret = os.getenv('client_secret')
 
-users = persistence.retrieve_users()
+users = retrieve_users()
 
 def update_user_data(user_to_check: User):
     users.loc[users['user_id'] == user_to_check.user_id, 'access_token'] = user_to_check.access_token
     users.loc[users['user_id'] == user_to_check.user_id, 'refresh_token'] = user_to_check.refresh_token
     users.loc[users['user_id'] == user_to_check.user_id, 'playlist_id'] = user_to_check.playlist_id
+
+client_str = f"{client_id}:{client_secret}"
+client_b64 = base64.urlsafe_b64encode(client_str.encode()).decode()
 
 for index, row in users.iterrows():
 
@@ -44,5 +45,5 @@ for index, row in users.iterrows():
         logging.error(f'Spotify API call failing with code {err.status_code}: {err.json}')
         continue
 
-persisitence.upload_users(users)
+upload_users(users)
 

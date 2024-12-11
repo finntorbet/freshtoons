@@ -1,7 +1,7 @@
 name: deploy to lambda
 on:
   push:
-    branches: ['master']
+    #branches: ['master']
 jobs:
   tests:
     name: Python ${{ matrix.python-version }}

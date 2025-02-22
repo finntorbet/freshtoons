@@ -26,7 +26,7 @@ def update(event, context):
         users.loc[users['user_id'] == user_to_check.user_id, 'playlist_id'] = user_to_check.playlist_id
 
     client_str = f"{client_id}:{client_secret}"
-    client_b64 = base64.urlsafe_b64encode(client_str.encode()).decode()
+    client_b64 = base64.b64encode(client_str.encode('utf-8')).decode('utf-8')
 
     for index, row in users.iterrows():
 
@@ -53,4 +53,3 @@ def update(event, context):
             continue
 
     upload_users(users)
-

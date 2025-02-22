@@ -1,7 +1,3 @@
-from io import StringIO
-
-import boto3
-import pandas as pd
 import logging
 from abc import ABC, abstractmethod
 
@@ -21,6 +17,11 @@ class PersistenceInterface(ABC):
         pass
 
 class S3Persistence(PersistenceInterface):
+    from io import StringIO
+
+    import boto3
+    import pandas as pd
+
     def s3_retrieve_users(self, bucket='freshtoons'):
         s3 = boto3.client('s3')
         logging.debug(f'Trying to retrieve users.csv from {bucket}...')
@@ -44,13 +45,23 @@ class S3Persistence(PersistenceInterface):
         )
 
 class LocalPersistence(PersistenceInterface):
+    import csv
+
+    # Rewrite the csv to return 
+    # [
+    #   {"access_token": "", "x":"y"},
+    #   {"access_token": "", "x":"y"},
+    #   ...
+    # ]
+
     def __init__():
         self.local_path = os.getenv("LOCAL_STORAGE_PATH")
 
      def retrieve_users():
         if os.path.exists(self.local_path):
             logging.debug(f"Loading file: {self.local_path}")
-            return pd.re ad_csv(self.local_path)
+            with open(self.local_path):
+                return csv.reader(self.local_path, delimiter=",")
         else:
             logging.error("Invalid path!")
             os.exit(1)
@@ -58,7 +69,10 @@ class LocalPersistence(PersistenceInterface):
     def upload_users(users, bucket='freshtoons'):
         if os.path.exists(self.local_path):
             logging.debug(f"Saving file: {self.local_path}")
-            users.to_csv(self.local_path, index=False)
+            with open(self.local_path, "w") as csvfile:
+                writer = csv.writer(csvfile)
+                csv.writer(self.local_path)
+            users.to_csv(self.local_path,)
         else:
             logging.error("Invalid path!")
             os.exit(1)

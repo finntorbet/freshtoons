@@ -35,22 +35,27 @@ func (lf *LocalFile) SaveUser(user User) error {
 	userUpdated := false
 	for i, u := range users {
 		if u.UserID == user.UserID {
-			users[i] = user // Update existing user
+			users[i] = user
 			userUpdated = true
 			break
 		}
 	}
 
 	if !userUpdated {
-		users = append(users, user) // Add new user if not found
+		users = append(users, user)
 	}
 
-	file, err := os.Create(lf.FilePath)
+	// Marshal with indentation for pretty-printing
+	jsonData, err := json.MarshalIndent(users, "", "    ") // 4-space indentation
 	if err != nil {
 		return err
 	}
-	defer file.Close()
 
-	encoder := json.NewEncoder(file)
-	return encoder.Encode(users)
+	// Write to file
+	err = os.WriteFile(lf.FilePath, jsonData, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

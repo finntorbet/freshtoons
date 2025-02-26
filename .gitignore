@@ -6,3 +6,4 @@ src/config
 users.csv
 .gitignore
 __pycache__
+users.json

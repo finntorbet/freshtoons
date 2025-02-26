@@ -5,3 +5,4 @@ src/config
 .idea
 users.csv
 .gitignore
+__pycache__

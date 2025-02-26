@@ -180,7 +180,7 @@ class User:
     def get_liked_songs(self):
         """
         Retrieves this user's liked songs in chronological order (date added desc) as a list of song ids.
-        Uses: https://developer.spotify.com/documentation/web-api/reference/save-tracks-user
+        Uses: https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
 
         :return ids: list of unique ids of size self.playlist_size
         """
